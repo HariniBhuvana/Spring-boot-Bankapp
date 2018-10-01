@@ -8,4 +8,10 @@ public interface CustomerRepository {
 	public Customer updateProfile(Customer customer);
 
 	public boolean updatePassword(Customer customer, String oldPassword, String newPassword);
+
+	public Customer addCustomer(Customer customer);
+
+	public boolean deleteCustomer(long customerId);
+
+	
 }

@@ -15,32 +15,37 @@ import com.capgemini.purebankapp.service.BankAccountService;
 public class BankAccountServiceImpl implements BankAccountService{
 
 	@Autowired
-	BankAccountRepositoryImpl bankaccountrepositoryimpl;
+	BankAccountRepository bankaccountrepository;
 
 	@Override
 	public double getBalance(long accountId) throws UserNotFoundException {
-		return bankaccountrepositoryimpl.getBalance(accountId);
+		return bankaccountrepository.getBalance(accountId);
 		}
 
 	@Override
-	public double withdraw(long accountId, double amount) throws UserNotFoundException, NegetiveBalanceException {
-		double accountBalance = bankaccountrepositoryimpl.getBalance(accountId);
-		bankaccountrepositoryimpl.updateBalance(accountId, accountBalance - amount);
-		return accountBalance - amount;
+	public double withdraw(long accountId, double amount) throws NegetiveBalanceException, UserNotFoundException {
+		if(accountId==0) 
+			throw new UserNotFoundException("Customer Not Found");
+			
+		if(getBalance(accountId)>=amount) {
+		double accountBalance = bankaccountrepository.getBalance(accountId);
+		bankaccountrepository.updateBalance(accountId, accountBalance - amount);
+		return accountBalance - amount;}
+		throw new NegetiveBalanceException("Balance is low to make Transaction");
 		
 	}
 
 	@Override
 	public double deposit(long accountId, double amount) throws UserNotFoundException {
-		double accountBalance = bankaccountrepositoryimpl.getBalance(accountId);
-		bankaccountrepositoryimpl.updateBalance(accountId, accountBalance + amount);
+		double accountBalance = bankaccountrepository.getBalance(accountId);
+		bankaccountrepository.updateBalance(accountId, accountBalance + amount);
 		return accountBalance + amount;
 	}
 
 	@Override
 	public boolean fundTransfer(long fromAcc, long toAcc, double amount)
 			throws NegetiveBalanceException, InsufficientBalanceException, UserNotFoundException {
-double accountBalanceFrom = bankaccountrepositoryimpl.getBalance(fromAcc);
+double accountBalanceFrom = bankaccountrepository.getBalance(fromAcc);
 		
 		if (accountBalanceFrom < amount) 
 			throw new InsufficientBalanceException("There is no sufficient balance in your account!");

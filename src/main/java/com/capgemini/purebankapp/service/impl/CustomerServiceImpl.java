@@ -1,31 +1,65 @@
 package com.capgemini.purebankapp.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CustomizableThreadCreator;
 
 import com.capgemini.purebankapp.entities.Customer;
+import com.capgemini.purebankapp.exception.PasswordChangeFailedException;
+import com.capgemini.purebankapp.exception.UpdationFailedException;
 import com.capgemini.purebankapp.exception.UserNotFoundException;
-import com.capgemini.purebankapp.repository.impl.CustomerRepositoryImpl;
+import com.capgemini.purebankapp.repository.CustomerRepository;
 import com.capgemini.purebankapp.service.CustomerService;
 @Service
 public class CustomerServiceImpl implements CustomerService {
 	@Autowired
-	CustomerRepositoryImpl customerrepositoryimpl;
+	CustomerRepository customerrepository;
 	@Override
 	public Customer authenticate(Customer customer) throws UserNotFoundException {
-		return customerrepositoryimpl.authenticate(customer);
+		try {
+		return customerrepository.authenticate(customer);
+		}
+		catch(DataAccessException e)
+		{
+			UserNotFoundException u= new UserNotFoundException("Customer not found");
+			u.initCause(e);
+			throw u;}
+		}
+
+	@Override
+	public Customer updateProfile(Customer customer)throws UpdationFailedException {
+		try {
+		return customerrepository.updateProfile(customer);}
+		catch(DataAccessException e) {
+			UpdationFailedException updationFailedException = new UpdationFailedException(
+					"failed to update the customer details");
+			updationFailedException.initCause(e);
+			throw updationFailedException;
+		}
 	}
 
 	@Override
-	public Customer updateProfile(Customer customer) {
-		return customerrepositoryimpl.updateProfile(customer);
-	}
-
-	@Override
-	public boolean updatePassword(Customer customer, String oldPassword, String newPassword) {
+	public boolean updatePassword(Customer customer, String oldPassword, String newPassword)throws PasswordChangeFailedException {
+		try {
+			return customerrepository.updatePassword(customer, oldPassword, newPassword);
+		}
+		catch(DataAccessException e) {
+			PasswordChangeFailedException passwordChangeFailedException=new PasswordChangeFailedException("Failed to change the password");
+			passwordChangeFailedException.initCause(e);
+			throw e;}
 		
-		return customerrepositoryimpl.updatePassword(customer, oldPassword, newPassword);
 	}
+
+	@Override
+	public Customer addCustomer(Customer customer) {
+		return customerrepository.addCustomer(customer);
+	}
+
+	@Override
+	public boolean deleteCustomer(long customerId) {
+		// TODO Auto-generated method stub
+		return customerrepository.deleteCustomer(customerId);
+	}
+	
  
 }

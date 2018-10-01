@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.capgemini.purebankapp.entities.Customer;
+import com.capgemini.purebankapp.exception.PasswordChangeFailedException;
+import com.capgemini.purebankapp.exception.UpdationFailedException;
 import com.capgemini.purebankapp.exception.UserNotFoundException;
 import com.capgemini.purebankapp.service.CustomerService;
 
@@ -50,7 +52,7 @@ public class CustomerController {
 	
 	@RequestMapping(value="/editprofile")
 	public String editProfile(Model model,@RequestParam String custName, @RequestParam String custAddress,
-			@RequestParam String custEmail, @RequestParam String custDOB, HttpSession session) {
+			@RequestParam String custEmail, @RequestParam String custDOB, HttpSession session) throws UpdationFailedException {
 		
 		Customer customer=(Customer)session.getAttribute("customer");
 		
@@ -73,7 +75,7 @@ public class CustomerController {
 	
 	@RequestMapping(value="/changePassword")
 	public String editPassword(HttpSession session, @RequestParam String oldPassword, 
-			@RequestParam String newPassword, HttpServletRequest request) {
+			@RequestParam String newPassword, HttpServletRequest request) throws PasswordChangeFailedException {
 		Customer customer=(Customer)session.getAttribute("customer");
 		customerservice.updatePassword(customer, oldPassword, newPassword);
 		session.setAttribute("customer", customer);

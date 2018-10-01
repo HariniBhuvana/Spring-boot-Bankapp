@@ -16,8 +16,8 @@ public class PurebankappApplicationTests {
 	@Test
 	public void contextLoads() {
 		CustomerController customerController=new CustomerController();
-		String result=customerController.editPasswordPage();
-		assertEquals(result, "changePassword");
+		String result=customerController.editProfilePage();
+		assertEquals(result,"editCustomer");
 	}
 
 }
