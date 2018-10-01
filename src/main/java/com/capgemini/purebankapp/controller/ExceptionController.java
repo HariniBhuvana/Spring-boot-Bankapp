@@ -35,7 +35,7 @@ public String handlheError(HttpServletRequest request, UserNotFoundException exc
 	return "success";
 }
 @ExceptionHandler(value = NegetiveBalanceException.class)
-public String handlheErrorf(HttpServletRequest request, NegetiveBalanceException exception) {
+public String handleError(HttpServletRequest request, NegetiveBalanceException exception) {
 	System.out.println(exception);
 	request.setAttribute("success", false);
 	request.setAttribute("error", exception);
@@ -43,7 +43,7 @@ public String handlheErrorf(HttpServletRequest request, NegetiveBalanceException
 	return "success";
 }
 @ExceptionHandler(value = PasswordChangeFailedException.class)
-public String handlheErrorf(HttpServletRequest request, PasswordChangeFailedException exception) {
+public String handleError(HttpServletRequest request, PasswordChangeFailedException exception) {
 	System.out.println(exception);
 	request.setAttribute("success", false);
 	request.setAttribute("error", exception);
@@ -52,7 +52,7 @@ public String handlheErrorf(HttpServletRequest request, PasswordChangeFailedExce
 }
 
 @ExceptionHandler(value = UpdationFailedException.class)
-public String handlheErrorf(HttpServletRequest request, UpdationFailedException exception) {
+public String handleError(HttpServletRequest request, UpdationFailedException exception) {
 	System.out.println(exception);
 	request.setAttribute("success", false);
 	request.setAttribute("error", exception);
@@ -60,7 +60,7 @@ public String handlheErrorf(HttpServletRequest request, UpdationFailedException 
 	return "success";
 }
 @ExceptionHandler(value = SQLException.class)
-public String handlheErrorf(HttpServletRequest request, SQLException exception) {
+public String handleError(HttpServletRequest request, SQLException exception) {
 	System.out.println(exception);
 	request.setAttribute("success", false);
 	request.setAttribute("error", exception);
