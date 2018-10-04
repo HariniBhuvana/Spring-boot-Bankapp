@@ -15,25 +15,24 @@ public class BankAccountRepositoryImpl implements BankAccountRepository {
 	private JdbcTemplate jdbctemplate;
 
 	@Override
-	public double getBalance(long accountId)throws DataAccessException {
+	public double getBalance(long accountId) throws DataAccessException {
 		try {
-		double balance= jdbctemplate.queryForObject("SELECT balance FROM bankaccount WHERE account = ?",
-				new Object[] { accountId }, Double.class);
-return balance;
-	}
-	catch(DataAccessException e){
-		e.initCause(new EmptyResultDataAccessException("Expected 1 actual 0", 1));
-		throw e;
-	}}
-
-	@Override
-	public double updateBalance(long accountId, double newBalance)throws DataAccessException {
-		try {
-		return jdbctemplate.update("UPDATE bankaccount SET balance=? WHERE account=?",
-				new Object[] { newBalance, accountId });}
-		catch(DataAccessException e) {
-			e.initCause(new EmptyResultDataAccessException("Expected 1 actual 0",1));
+			double balance = jdbctemplate.queryForObject("SELECT balance FROM bankaccount WHERE account = ?",
+					new Object[] { accountId }, Double.class);
+			return balance;
+		} catch (DataAccessException e) {
+			e.initCause(new EmptyResultDataAccessException("Expected 1 actual 0", 1));
 			throw e;
 		}
+	}
+
+	@Override
+	public boolean updateBalance(long accountId, double newBalance)  {
+		
+			int count= jdbctemplate.update("UPDATE bankaccount SET balance=? WHERE account=?",
+					new Object[] { newBalance, accountId });
+			return (count!=0)?true:false;
+		
+		
 	}
 }

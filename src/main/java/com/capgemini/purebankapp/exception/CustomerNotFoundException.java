@@ -1,8 +1,8 @@
 package com.capgemini.purebankapp.exception;
 
-public class UserNotFoundException extends Exception {
+public class CustomerNotFoundException extends Exception {
 
-	public UserNotFoundException(String message) {
+	public CustomerNotFoundException(String message) {
 		super(message);
 		// TODO Auto-generated constructor stub
 	}

@@ -29,7 +29,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
 		customer.setAccount(baccount);
 		return customer;}
 		catch(DataAccessException e) {
-			e.initCause(new EmptyResultDataAccessException(1));
+			e.initCause(new EmptyResultDataAccessException("Expected 1 actual 0",1));
 			throw e;
 			
 		}
@@ -37,8 +37,8 @@ public class CustomerRepositoryImpl implements CustomerRepository {
 	}
 
 	@Override
-	public Customer updateProfile(Customer customer)throws DataAccessException  {
-		try {
+	public Customer updateProfile(Customer customer)  {
+		
 		jdbctemplate.update(
 				"UPDATE customers SET address = ?,dateOfBirth = ?,email=?,customerName=?   WHERE customerId = ?",
 				new Object[] { customer.getAddress(), customer.getDateOfBirth(),
@@ -46,15 +46,12 @@ public class CustomerRepositoryImpl implements CustomerRepository {
 		customer=jdbctemplate.queryForObject("SELECT * FROM customers WHERE customerId=?",new Object[] {customer.getCustomerId()},new CustomerRowMapper());
 		return customer;		
 	}
-	catch(DataAccessException e) {
-		e.initCause(new EmptyResultDataAccessException(1));
-		throw e;
-	}}
+	
 
 	@Override
 	public boolean updatePassword(Customer customer, String oldPassword, String newPassword) throws DataAccessException {
 	try{int count=jdbctemplate.update("UPDATE customers SET password=? WHERE customerId=? AND password=?",new Object[] { newPassword, customer.getCustomerId(), oldPassword});
-	return (count!=0)?true:false;}
+	return true;}
 	catch(DataAccessException e) {
 		e.initCause(new EmptyResultDataAccessException(1));
 		throw e;

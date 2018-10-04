@@ -9,14 +9,16 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.capgemini.purebankapp.entities.Customer;
 import com.capgemini.purebankapp.exception.InsufficientBalanceException;
 import com.capgemini.purebankapp.exception.NegetiveBalanceException;
-import com.capgemini.purebankapp.exception.UserNotFoundException;
+import com.capgemini.purebankapp.exception.CustomerNotFoundException;
 import com.capgemini.purebankapp.service.BankAccountService;
 
 @Controller
+@SessionAttributes("customer")
 public class BankAccountController {
 
 	@Autowired
@@ -32,7 +34,7 @@ public class BankAccountController {
 
 	@RequestMapping(value = "/fundTransfer", method = RequestMethod.POST)
 	public String transferFund( @RequestParam long toAcc, @RequestParam long amount,
-			Model model, HttpSession session) throws NegetiveBalanceException, InsufficientBalanceException, UserNotFoundException {
+			Model model, HttpSession session) throws NegetiveBalanceException, InsufficientBalanceException, CustomerNotFoundException {
 		Customer customer = (Customer) session.getAttribute("customer");
 		long fromAcc=customer.getAccount().getAccountId();
 		bankaccountService.fundTransfer(fromAcc, toAcc, amount);

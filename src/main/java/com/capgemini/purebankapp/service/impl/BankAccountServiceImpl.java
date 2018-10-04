@@ -1,15 +1,13 @@
 package com.capgemini.purebankapp.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
-import com.capgemini.purebankapp.entities.Customer;
 import com.capgemini.purebankapp.exception.InsufficientBalanceException;
 import com.capgemini.purebankapp.exception.NegetiveBalanceException;
-import com.capgemini.purebankapp.exception.UserNotFoundException;
+import com.capgemini.purebankapp.exception.CustomerNotFoundException;
 import com.capgemini.purebankapp.repository.BankAccountRepository;
-import com.capgemini.purebankapp.repository.impl.BankAccountRepositoryImpl;
 import com.capgemini.purebankapp.service.BankAccountService;
 @Service
 public class BankAccountServiceImpl implements BankAccountService{
@@ -18,14 +16,21 @@ public class BankAccountServiceImpl implements BankAccountService{
 	BankAccountRepository bankaccountrepository;
 
 	@Override
-	public double getBalance(long accountId) throws UserNotFoundException {
+	public double getBalance(long accountId) throws CustomerNotFoundException {
+		try {
 		return bankaccountrepository.getBalance(accountId);
 		}
+		catch(DataAccessException e){
+			CustomerNotFoundException customerNotFound=new CustomerNotFoundException("Customer does not exist");
+			customerNotFound.initCause(e);
+			throw customerNotFound;
+		}
+	}
 
 	@Override
-	public double withdraw(long accountId, double amount) throws NegetiveBalanceException, UserNotFoundException {
+	public double withdraw(long accountId, double amount) throws NegetiveBalanceException, CustomerNotFoundException {
 		if(accountId==0) 
-			throw new UserNotFoundException("Customer Not Found");
+			throw new CustomerNotFoundException("Customer Not Found");
 			
 		if(getBalance(accountId)>=amount) {
 		double accountBalance = bankaccountrepository.getBalance(accountId);
@@ -36,7 +41,7 @@ public class BankAccountServiceImpl implements BankAccountService{
 	}
 
 	@Override
-	public double deposit(long accountId, double amount) throws UserNotFoundException {
+	public double deposit(long accountId, double amount)  {
 		double accountBalance = bankaccountrepository.getBalance(accountId);
 		bankaccountrepository.updateBalance(accountId, accountBalance + amount);
 		return accountBalance + amount;
@@ -44,7 +49,7 @@ public class BankAccountServiceImpl implements BankAccountService{
 
 	@Override
 	public boolean fundTransfer(long fromAcc, long toAcc, double amount)
-			throws NegetiveBalanceException, InsufficientBalanceException, UserNotFoundException {
+			throws NegetiveBalanceException, InsufficientBalanceException, CustomerNotFoundException {
 double accountBalanceFrom = bankaccountrepository.getBalance(fromAcc);
 		
 		if (accountBalanceFrom < amount) 

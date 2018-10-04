@@ -8,13 +8,13 @@
 
 	<groupId>com.capgemini</groupId>
 
-	<artifactId>hdfcbank</artifactId>
+	<artifactId>safebank</artifactId>
 
 	<version>0.0.1-SNAPSHOT</version>
 
 	<packaging>jar</packaging>
 
-	<name>hdfcbank</name>
+	<name>safebank</name>
 
 	<description>Demo project for Spring Boot</description>
 
